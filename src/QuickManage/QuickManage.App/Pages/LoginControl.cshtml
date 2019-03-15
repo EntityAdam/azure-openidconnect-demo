@@ -1,0 +1,52 @@
+﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Http
+@page "/login"
+@inject HttpClient Http
+@inject HttpContextAccessor _httpContextAccessor
+
+@if (User.Identity.Name != null)
+{
+    <b>You are logged in as: @GivenName</b>
+    @*<a class="ml-md-auto btn btn-primary"
+        href="/auth/signout?post_logout_redirect_uri=@RedirectUri"
+        target="_top">Logout</a>*@
+    <form class="ml-md-auto" method="post" action="/auth/signout">
+        <input class="btn btn-primary" type="submit" value="Sign Out" />
+    </form>
+}
+else
+{
+    <a class="ml-md-auto btn btn-primary"
+       href="/auth/signin?redirectUri=@RedirectUri"
+       target="_top">Login</a>
+}
+@functions {
+    private ClaimsPrincipal User;
+    private string RedirectUri;
+    private string GivenName;
+    protected override void OnInit()
+    {
+        base.OnInit();
+        try
+        {
+            // Set the user to determine if they are logged in
+            User = _httpContextAccessor.HttpContext.User;
+            // Try to get the GivenName
+            var givenName =
+                _httpContextAccessor.HttpContext.User
+                .FindFirst(ClaimTypes.GivenName);
+            if (givenName != null)
+            {
+                GivenName = givenName.Value;
+            }
+            else
+            {
+                GivenName = User.Identity.Name;
+            }
+            // Need to determine where we are to set the RedirectUri
+            RedirectUri =
+                _httpContextAccessor.HttpContext.Request.Host.Value;
+        }
+        catch { }
+    }
+}
