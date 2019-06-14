@@ -1,5 +1,8 @@
+# [OBSOLETE]
+# Needs to be re-written for preview-5
+
 # Razor Components Authentication with Azure AD
-## In .NET Core 3.0 Preview 
+## In .NET Core 3.0 Preview 3
 
 # Overview
 1. Azure Account (Not Covered)
